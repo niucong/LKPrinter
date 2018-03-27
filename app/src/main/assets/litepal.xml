@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="lankai"/>
+    <version value="1"/>
+
+    <!--think database-->
+    <list>
+        <mapping class="com.niucong.lkprinter.db.HotelCheckDB"/>
+    </list>
+
+</litepal>
