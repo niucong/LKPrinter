@@ -42,6 +42,8 @@ import com.niucong.lkprinter.db.HotelCheckDB;
 import com.niucong.lkprinter.printer.PrinterConnectDialog;
 import com.niucong.lkprinter.util.PrintUtil;
 
+import org.litepal.LitePal;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Vector;
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        LitePal.initialize(this);
         connection();
         registerReceiver(mBroadcastReceiver, new IntentFilter(GpCom.ACTION_DEVICE_REAL_STATUS));
 
@@ -157,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.action_record:
-
+                startActivity(new Intent(this, RecordListActivity.class));
                 break;
             case R.id.action_settings:
                 if (mGpService == null) {

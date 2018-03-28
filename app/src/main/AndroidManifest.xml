@@ -38,6 +38,8 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".RecordListActivity" />
+        <activity
             android:name=".printer.PrinterConnectDialog"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"/>
