@@ -38,7 +38,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RecordListActivity" />
+            android:name=".RecordListActivity"
+            android:label="入住记录"/>
+        <activity
+            android:name=".RecordDetailActivity"
+            android:label="入住详情"/>
         <activity
             android:name=".printer.PrinterConnectDialog"
             android:configChanges="orientation|keyboardHidden"

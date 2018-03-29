@@ -15,158 +15,153 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="客户名称"
+                android:text="流水号："
                 android:textColor="#000000"
                 android:textSize="18dp"/>
 
-            <EditText
-                android:id="@+id/et_name"
-                android:layout_width="100dp"
+            <TextView
+                android:id="@+id/tv_number"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:singleLine="true"/>
+                android:textColor="#000000"
+                android:textSize="18dp"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="客户电话"
+                android:text="客户名称："
                 android:textColor="#000000"
                 android:textSize="18dp"/>
 
-            <EditText
-                android:id="@+id/et_phone"
-                android:layout_width="200dp"
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLength="11"
-                android:singleLine="true"/>
+                android:textColor="#000000"
+                android:textSize="18dp"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="身份证号"
+                android:text="客户电话："
                 android:textColor="#000000"
                 android:textSize="18dp"/>
 
-            <EditText
-                android:id="@+id/et_card"
-                android:layout_width="300dp"
+            <TextView
+                android:id="@+id/tv_phone"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:maxLength="18"
-                android:singleLine="true"/>
+                android:textColor="#000000"
+                android:textSize="18dp"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="房间号码"
+                android:text="身份证号："
                 android:textColor="#000000"
                 android:textSize="18dp"/>
 
-            <EditText
-                android:id="@+id/et_room"
-                android:layout_width="80dp"
+            <TextView
+                android:id="@+id/tv_card"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLength="5"
-                android:singleLine="true"/>
+                android:textColor="#000000"
+                android:textSize="18dp"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:text="入住性质"
-                android:textColor="#000000"
-                android:textSize="18dp"/>
-
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/rb_type_day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="全天"/>
-
-                <RadioButton
-                    android:id="@+id/rb_type_hour"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="钟点"/>
-
-                <RadioButton
-                    android:id="@+id/rb_type_overstay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="续住"/>
-            </RadioGroup>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:text="入住时间"
+                android:text="房间号码："
+                android:textColor="#000000"
+                android:textSize="18dp"/>
+
+            <TextView
+                android:id="@+id/tv_room"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:textSize="18dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="入住性质："
+                android:textColor="#000000"
+                android:textSize="18dp"/>
+
+            <TextView
+                android:id="@+id/tv_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:textSize="18dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="入住时间："
                 android:textColor="#000000"
                 android:textSize="18dp"/>
 
             <TextView
                 android:id="@+id/tv_time"
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="请选择入住时间"
                 android:textColor="#000000"
                 android:textSize="18dp"/>
         </LinearLayout>
@@ -174,24 +169,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:text="最晚退房时间"
+                android:text="最晚退房时间："
                 android:textColor="#000000"
                 android:textSize="18dp"/>
 
             <TextView
                 android:id="@+id/tv_out"
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="请选择最晚退房时间"
                 android:textColor="#000000"
                 android:textSize="18dp"/>
         </LinearLayout>
@@ -199,24 +191,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="入住天数"
+                android:text="入住天数："
                 android:textColor="#000000"
                 android:textSize="18dp"/>
 
-            <EditText
-                android:id="@+id/et_day"
-                android:layout_width="50dp"
+            <TextView
+                android:id="@+id/tv_day"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:singleLine="true"/>
+                android:textColor="#000000"
+                android:textSize="18dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -229,24 +220,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="房间单价"
+                android:text="房间单价："
                 android:textColor="#000000"
                 android:textSize="18dp"/>
 
-            <EditText
-                android:id="@+id/et_price"
-                android:layout_width="50dp"
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:singleLine="true"/>
+                android:textColor="#000000"
+                android:textSize="18dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -259,16 +249,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:text="房间费用"
+                android:text="房间费用："
                 android:textColor="#000000"
                 android:textSize="18dp"/>
 
@@ -290,24 +278,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="已交费用"
+                android:text="已交费用："
                 android:textColor="#000000"
                 android:textSize="18dp"/>
 
-            <EditText
-                android:id="@+id/et_cost"
-                android:layout_width="100dp"
+            <TextView
+                android:id="@+id/tv_paid"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:singleLine="true"/>
+                android:textColor="#000000"
+                android:textSize="18dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -320,24 +307,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="退房押金"
+                android:text="退房押金："
                 android:textColor="#000000"
                 android:textSize="18dp"/>
 
-            <EditText
-                android:id="@+id/et_deposit"
-                android:layout_width="100dp"
+            <TextView
+                android:id="@+id/tv_deposit"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionDone"
-                android:inputType="number"
-                android:singleLine="true"/>
+                android:textColor="#000000"
+                android:textSize="18dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -350,95 +336,45 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:text="收款方式"
+                android:layout_marginRight="10dp"
+                android:text="收款方式："
                 android:textColor="#000000"
                 android:textSize="18dp"/>
 
-            <RadioGroup
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_pay"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/rb_pay_alipay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="支付宝"/>
-
-                <RadioButton
-                    android:id="@+id/rb_pay_wechat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="微信"/>
-
-                <RadioButton
-                    android:id="@+id/rb_pay_meituan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="美团"/>
-
-                <RadioButton
-                    android:id="@+id/rb_pay_cash"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="现金"/>
-            </RadioGroup>
+                android:textColor="#000000"
+                android:textSize="18dp"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:text="客户来源"
+                android:layout_marginRight="10dp"
+                android:text="客户来源："
                 android:textColor="#000000"
                 android:textSize="18dp"/>
 
-            <RadioGroup
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_from"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/rb_from_phone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="电话预定"/>
-
-                <RadioButton
-                    android:id="@+id/rb_from_meituan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="美团"/>
-
-                <RadioButton
-                    android:id="@+id/rb_from_xiecheng"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="携程"/>
-
-                <RadioButton
-                    android:id="@+id/rb_from_other"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="其它"/>
-            </RadioGroup>
+                android:textColor="#000000"
+                android:textSize="18dp"/>
         </LinearLayout>
 
         <Button

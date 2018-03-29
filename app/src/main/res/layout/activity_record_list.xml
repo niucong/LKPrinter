@@ -9,6 +9,7 @@
         android:id="@+id/et_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLength="18"
         android:hint="输入房间号、客户名、电话、身份证号查询"/>
 
     <include

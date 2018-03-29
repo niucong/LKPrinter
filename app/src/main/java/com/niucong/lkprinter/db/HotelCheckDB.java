@@ -1,12 +1,15 @@
 package com.niucong.lkprinter.db;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.litepal.crud.DataSupport;
 
 /**
  * Created by think on 2018/3/26.
  */
 
-public class HotelCheckDB extends DataSupport {
+public class HotelCheckDB extends DataSupport implements Parcelable {
     private int id;
     private long serial_number;// 流水号
     private String name;// 客户名称
@@ -142,4 +145,61 @@ public class HotelCheckDB extends DataSupport {
     public void setFrom(String from) {
         this.from = from;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeLong(this.serial_number);
+        dest.writeString(this.name);
+        dest.writeString(this.phone);
+        dest.writeString(this.card);
+        dest.writeString(this.room);
+        dest.writeString(this.type);
+        dest.writeLong(this.time);
+        dest.writeLong(this.out);
+        dest.writeInt(this.day);
+        dest.writeInt(this.price);
+        dest.writeInt(this.cost);
+        dest.writeInt(this.deposit);
+        dest.writeString(this.pay);
+        dest.writeString(this.from);
+    }
+
+    public HotelCheckDB() {
+    }
+
+    protected HotelCheckDB(Parcel in) {
+        this.id = in.readInt();
+        this.serial_number = in.readLong();
+        this.name = in.readString();
+        this.phone = in.readString();
+        this.card = in.readString();
+        this.room = in.readString();
+        this.type = in.readString();
+        this.time = in.readLong();
+        this.out = in.readLong();
+        this.day = in.readInt();
+        this.price = in.readInt();
+        this.cost = in.readInt();
+        this.deposit = in.readInt();
+        this.pay = in.readString();
+        this.from = in.readString();
+    }
+
+    public static final Creator<HotelCheckDB> CREATOR = new Creator<HotelCheckDB>() {
+        @Override
+        public HotelCheckDB createFromParcel(Parcel source) {
+            return new HotelCheckDB(source);
+        }
+
+        @Override
+        public HotelCheckDB[] newArray(int size) {
+            return new HotelCheckDB[size];
+        }
+    };
 }

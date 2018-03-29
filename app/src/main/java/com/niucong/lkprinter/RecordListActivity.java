@@ -1,7 +1,11 @@
 package com.niucong.lkprinter;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,16 +13,19 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.niucong.lkprinter.db.HotelCheckDB;
+import com.niucong.lkprinter.view.NiftyDialogBuilder;
+import com.niucong.lkprinter.view.wheel.DateTimeSelectView;
 
 import org.litepal.crud.DataSupport;
 
@@ -43,13 +50,16 @@ public class RecordListActivity extends AppCompatActivity {
 
     private Date startDate, endDate;
 
-    private String startTip;
-    private int showType;// 0:按订单查看、1：按药品查看
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_list);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mRecyclerView = (RecyclerView) findViewById(R.id.record_list_rv);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -60,7 +70,6 @@ public class RecordListActivity extends AppCompatActivity {
         mRecyclerView.requestFocus();
 
         et_search = (EditText) findViewById(R.id.et_search);
-        et_search.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
         et_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -100,8 +109,7 @@ public class RecordListActivity extends AppCompatActivity {
     }
 
     private void selectData(Date st, Date et) {
-//        mDatas = DBUtil.getDaoSession().getSellRecordDao().queryBuilder().where(SellRecordDao.Properties.SellDate.ge(st),
-//                SellRecordDao.Properties.SellDate.le(et)).orderDesc(SellRecordDao.Properties.SellDate).list();
+        mDatas = DataSupport.where("time >= ? and time <= ?", "" + st.getTime(), "" + et.getTime()).find(HotelCheckDB.class);
     }
 
     @Override
@@ -114,6 +122,9 @@ public class RecordListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish(); // back button
+                break;
             case R.id.action_all:
                 mDatas = DataSupport.findAll(HotelCheckDB.class);
                 setAdapter(mDatas);
@@ -142,75 +153,70 @@ public class RecordListActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.action_select:
-//                showSubmitDia();
+                showSubmitDia();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-//    /**
-//     * 选择日期对话框
-//     */
-//    private void showSubmitDia() {
-//        final NiftyDialogBuilder submitDia = NiftyDialogBuilder.getInstance(this);
-//        View selectDateView = LayoutInflater.from(this).inflate(R.layout.dialog_select_date, null);
-//        final DateTimeSelectView ds = (DateTimeSelectView) selectDateView.findViewById(R.id.date_start);
-//        final DateTimeSelectView de = (DateTimeSelectView) selectDateView.findViewById(R.id.date_end);
-//
-//        final Calendar c = Calendar.getInstance();
-//        try {
-//            startDate = ymdhm.parse(ymdhm.format(new Date()));// 当日00：00：00
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        endDate = new Date();
-//
-//        submitDia.withTitle("选择查询日期");
-//        submitDia.withButton1Text("取消", 0).setButton1Click(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                submitDia.dismiss();
-//            }
-//        });
-//        submitDia.withButton2Text("确定", 0).setButton2Click(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try {
-//                    startDate = ymdhm.parse(ds.getDate());
-//                    Log.d(TAG, "开始：" + ds.getDate() + "，结束：" + de.getDate() + "，当前：" + ymdhm.format(new Date()));
-////                    if (ymd.format(new Date()).equals(de.getDate())) {// 结束日期是今天
-////                        endDate = new Date();// 当前时间
-////                    } else {
-////                        endDate = new Date(ymd.parse(de.getDate()).getTime() + 1000 * 60 * 60 * 24 - 1);// 当日23：59：59
-////                    }
-//                    endDate = ymdhm.parse(de.getDate());
-//                    if (endDate.before(startDate)) {
-//                        Snackbar.make(mRecyclerView, "开始日期不能大于结束日期", Snackbar.LENGTH_LONG)
-//                                .setAction("Action", null).show();
+    /**
+     * 选择日期对话框
+     */
+    private void showSubmitDia() {
+        final NiftyDialogBuilder submitDia = NiftyDialogBuilder.getInstance(this);
+        View selectDateView = LayoutInflater.from(this).inflate(R.layout.dialog_select_date, null);
+        final DateTimeSelectView ds = (DateTimeSelectView) selectDateView.findViewById(R.id.date_start);
+        final DateTimeSelectView de = (DateTimeSelectView) selectDateView.findViewById(R.id.date_end);
+
+        final Calendar c = Calendar.getInstance();
+        try {
+            startDate = ymdhm.parse(ymdhm.format(new Date()));// 当日00：00：00
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        endDate = new Date();
+
+        submitDia.withTitle("选择查询日期");
+        submitDia.withButton1Text("取消", 0).setButton1Click(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitDia.dismiss();
+            }
+        });
+        submitDia.withButton2Text("确定", 0).setButton2Click(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    startDate = ymdhm.parse(ds.getDate());
+                    Log.d(TAG, "开始：" + ds.getDate() + "，结束：" + de.getDate() + "，当前：" + ymdhm.format(new Date()));
+//                    if (ymd.format(new Date()).equals(de.getDate())) {// 结束日期是今天
+//                        endDate = new Date();// 当前时间
 //                    } else {
-//                        selectData(startDate, endDate);
-//                        setAdapter(mDatas);
-//                        startTip = ymdhm.format(startDate) + "到" + ymdhm.format(endDate) + "的";
-//                        setStatistics();
-//                        submitDia.dismiss();
+//                        endDate = new Date(ymd.parse(de.getDate()).getTime() + 1000 * 60 * 60 * 24 - 1);// 当日23：59：59
 //                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//        submitDia.setCustomView(selectDateView, this);// "请选择查询日期"
-//        submitDia.withMessage(null).withDuration(400);
-//        submitDia.isCancelable(false);
-//        submitDia.show();
-//    }
+                    endDate = ymdhm.parse(de.getDate());
+                    if (endDate.before(startDate)) {
+                        Toast.makeText(RecordListActivity.this, "开始日期不能大于结束日期", Toast.LENGTH_LONG).show();
+                    } else {
+                        selectData(startDate, endDate);
+                        setAdapter(mDatas);
+                        submitDia.dismiss();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        submitDia.setCustomView(selectDateView, this);// "请选择查询日期"
+        submitDia.withMessage(null).withDuration(400);
+        submitDia.isCancelable(false);
+        submitDia.show();
+    }
 
     private void searchRecord(String result) {
-        long code = Long.valueOf(result);
-        List<HotelCheckDB> sDatas = null;
-        sDatas = DataSupport.where("room = ? or name = ? or phone = ? or card = ?",
+        mDatas = DataSupport.where("room = ? or name = ? or phone = ? or card = ?",
                 result, result, result, result).find(HotelCheckDB.class);
-        setAdapter(sDatas);
+        setAdapter(mDatas);
     }
 
     class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHolder> {
@@ -229,7 +235,7 @@ public class RecordListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(MyViewHolder holder, final int position) {
-            HotelCheckDB hotelCheckDB = hotelCheckDBS.get(position);
+            final HotelCheckDB hotelCheckDB = hotelCheckDBS.get(position);
             holder.tv_num.setText(position + 1 + "");
             holder.tv_name.setText(hotelCheckDB.getName());
             holder.tv_room.setText(hotelCheckDB.getRoom());
@@ -237,7 +243,8 @@ public class RecordListActivity extends AppCompatActivity {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    startActivity(new Intent(StatisticsActivity.this, OrderActivity.class).putExtra("Date", d.getTime()));
+                    startActivity(new Intent(RecordListActivity.this, RecordDetailActivity.class)
+                            .putExtra("HotelCheckDB", hotelCheckDB));
                 }
             });
 
@@ -246,7 +253,18 @@ public class RecordListActivity extends AppCompatActivity {
             holder.tv_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    new AlertDialog.Builder(RecordListActivity.this)
+                            .setTitle("警告")
+                            .setMessage("删除后数据将不能恢复，是否继续删除？")
+                            .setPositiveButton("继续删除",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            hotelCheckDBS.remove(position);
+                                            hotelCheckDB.delete();
+                                            notifyDataSetChanged();
+                                        }
+                                    }).setNegativeButton("取消", null).show();
                 }
             });
         }
