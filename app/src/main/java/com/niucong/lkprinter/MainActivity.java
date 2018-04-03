@@ -41,7 +41,6 @@ import com.gprinter.service.GpPrintService;
 import com.niucong.lkprinter.db.HotelCheckDB;
 import com.niucong.lkprinter.printer.PrinterConnectDialog;
 import com.niucong.lkprinter.util.PrintUtil;
-import com.umeng.analytics.MobclickAgent;
 
 import org.litepal.LitePal;
 
@@ -62,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MobclickAgent.startWithConfigure(new MobclickAgent.UMAnalyticsConfig(this, "5ab996cdf29d9859af00002f", ""));
 
         LitePal.initialize(this);
         connection();
@@ -187,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             String start = tvTime.getText().toString();
             if (TextUtils.isEmpty(start)) {
-                Toast.makeText(this, "时间不能为空", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "入住时间不能为空", Toast.LENGTH_LONG).show();
                 return;
             }
             String end = tvOut.getText().toString();

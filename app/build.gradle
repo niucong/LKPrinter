@@ -10,7 +10,6 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders = ["UMENG_APPKEY": "5ab996cdf29d9859af00002f"]
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -20,6 +19,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
@@ -35,6 +35,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:26.1.0'
 
     implementation 'org.litepal.android:core:1.6.1'
-    implementation 'com.umeng.analytics:analytics:latest.integration'
+    compile 'com.umeng.sdk:common:latest.integration'
+    compile 'com.umeng.sdk:analytics:latest.integration'
 
 }

@@ -109,7 +109,7 @@ public class RecordListActivity extends AppCompatActivity {
     }
 
     private void selectData(Date st, Date et) {
-        mDatas = DataSupport.where("time >= ? and time <= ?", "" + st.getTime(), "" + et.getTime()).find(HotelCheckDB.class);
+        mDatas = DataSupport.where("out >= ? and out <= ?", "" + st.getTime(), "" + et.getTime()).find(HotelCheckDB.class);
     }
 
     @Override
