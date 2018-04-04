@@ -9,12 +9,15 @@
         android:id="@+id/et_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="房间号、客户名、电话、身份证号"
         android:maxLength="18"
-        android:hint="输入房间号、客户名、电话、身份证号查询"/>
+        android:singleLine="true"
+        android:textSize="18dp"/>
 
     <include
         android:id="@+id/store_title"
-        layout="@layout/item_record" />
+        layout="@layout/item_record"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/record_list_rv"

@@ -39,9 +39,11 @@
         </activity>
         <activity
             android:name=".RecordListActivity"
+            android:screenOrientation="portrait"
             android:label="入住记录"/>
         <activity
             android:name=".RecordDetailActivity"
+            android:screenOrientation="portrait"
             android:label="入住详情"/>
         <activity
             android:name=".printer.PrinterConnectDialog"
