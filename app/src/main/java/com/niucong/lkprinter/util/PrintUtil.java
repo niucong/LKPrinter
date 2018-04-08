@@ -65,6 +65,9 @@ public class PrintUtil {
         esc.addText("客户来源：" + hotelCheckDB.getFrom() + "\n");
         esc.addText("宾馆电话：010-84286638\n");
         esc.addText("宾馆地址：北京市朝阳区北三环东路和平西桥西南侧（地铁站A口）\n");
+        if ("钟点".equals(hotelCheckDB.getType())) {
+            esc.addText("注：钟点房每超过一小时（不到一小时按一小时计算）加收25元。\n");
+        }
         esc.addPrintAndLineFeed();
 
 //        esc.addPrintAndLineFeed();

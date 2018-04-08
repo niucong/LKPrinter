@@ -15,18 +15,24 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.niucong.lkprinter.db.HotelCheckDB;
+import com.niucong.lkprinter.view.NiftyDialogBuilder;
+import com.niucong.lkprinter.view.wheel.DateTimeSelectView;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -60,11 +66,11 @@ public class RecordListActivity extends AppCompatActivity {
                 DividerItemDecoration.VERTICAL));
         mRecyclerView.requestFocus();
 
-//        try {
-//            selectData(ymd.parse(ymd.format(new Date())), new Date());
-//        } catch (ParseException e) {
-//            setAdapter(mDatas);
-//        }
+        try {
+            selectData(ymd.parse(ymd.format(new Date())), new Date());
+        } catch (ParseException e) {
+            setAdapter(mDatas);
+        }
 
         et_search = (EditText) findViewById(R.id.et_search);
         et_search.addTextChangedListener(new TextWatcher() {
@@ -98,15 +104,16 @@ public class RecordListActivity extends AppCompatActivity {
 
     private void selectData(Date st, Date et) {
         Log.d(TAG, "st=" + ymdhms.format(st) + ",et=" + ymdhms.format(st));
-        mDatas = DataSupport.where("out >= ? and out <= ?", "" + st.getTime(), "" + et.getTime()).find(HotelCheckDB.class);
+        mDatas = DataSupport.where("(time >= ? and time <= ?) or (out >= ? and out <= ?)",
+                "" + st.getTime(), "" + et.getTime(), "" + st.getTime(), "" + et.getTime()).order("id desc").find(HotelCheckDB.class);
         setAdapter(mDatas);
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        this.getMenuInflater().inflate(R.menu.menu_select, menu);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.getMenuInflater().inflate(R.menu.menu_select, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -115,91 +122,91 @@ public class RecordListActivity extends AppCompatActivity {
             case android.R.id.home:
                 this.finish(); // back button
                 break;
-//            case R.id.action_all:
-//                mDatas = DataSupport.findAll(HotelCheckDB.class);
-//                setAdapter(mDatas);
-//                break;
-//            case R.id.action_day:
-//                try {
-//                    selectData(ymd.parse(ymd.format(new Date())), new Date());
-//                } catch (ParseException e) {
-//                    setAdapter(mDatas);
-//                }
-//                break;
-//            case R.id.action_mouth:
-//                String startDate = "";
-//                try {
-//                    Calendar c = Calendar.getInstance();
-//                    if (c.get(Calendar.MONTH) < 9) {
-//                        startDate = c.get(Calendar.YEAR) + "-0" + (c.get(Calendar.MONTH) + 1) + "-01";
-//                    } else {
-//                        startDate = c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-01";
-//                    }
-//                    selectData(ymd.parse(startDate), new Date());
-//                } catch (ParseException e) {
-//                    setAdapter(mDatas);
-//                }
-//                break;
-//            case R.id.action_select:
-//                showSubmitDia();
-//                break;
+            case R.id.action_all:
+                mDatas = DataSupport.findAll(HotelCheckDB.class);
+                setAdapter(mDatas);
+                break;
+            case R.id.action_day:
+                try {
+                    selectData(ymd.parse(ymd.format(new Date())), new Date());
+                } catch (ParseException e) {
+                    setAdapter(mDatas);
+                }
+                break;
+            case R.id.action_mouth:
+                String startDate = "";
+                try {
+                    Calendar c = Calendar.getInstance();
+                    if (c.get(Calendar.MONTH) < 9) {
+                        startDate = c.get(Calendar.YEAR) + "-0" + (c.get(Calendar.MONTH) + 1) + "-01";
+                    } else {
+                        startDate = c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-01";
+                    }
+                    selectData(ymd.parse(startDate), new Date());
+                } catch (ParseException e) {
+                    setAdapter(mDatas);
+                }
+                break;
+            case R.id.action_select:
+                showSubmitDia();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
-//
-//    /**
-//     * 选择日期对话框
-//     */
-//    private void showSubmitDia() {
-//        final NiftyDialogBuilder submitDia = NiftyDialogBuilder.getInstance(this);
-//        View selectDateView = LayoutInflater.from(this).inflate(R.layout.dialog_select_date, null);
-//        final DateTimeSelectView ds = (DateTimeSelectView) selectDateView.findViewById(R.id.date_start);
-//        final DateTimeSelectView de = (DateTimeSelectView) selectDateView.findViewById(R.id.date_end);
-//
-//        final Calendar c = Calendar.getInstance();
-//        try {
-//            startDate = ymdhm.parse(ymdhm.format(new Date()));// 当日00：00：00
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        endDate = new Date();
-//
-//        submitDia.withTitle("选择查询日期");
-//        submitDia.withButton1Text("取消", 0).setButton1Click(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                submitDia.dismiss();
-//            }
-//        });
-//        submitDia.withButton2Text("确定", 0).setButton2Click(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try {
-//                    startDate = ymdhm.parse(ds.getDate());
-//                    Log.d(TAG, "开始：" + ds.getDate() + "，结束：" + de.getDate() + "，当前：" + ymdhm.format(new Date()));
-////                    if (ymd.format(new Date()).equals(de.getDate())) {// 结束日期是今天
-////                        endDate = new Date();// 当前时间
-////                    } else {
-////                        endDate = new Date(ymd.parse(de.getDate()).getTime() + 1000 * 60 * 60 * 24 - 1);// 当日23：59：59
-////                    }
-//                    endDate = ymdhm.parse(de.getDate());
-//                    if (endDate.before(startDate)) {
-//                        Toast.makeText(RecordListActivity.this, "开始日期不能大于结束日期", Toast.LENGTH_LONG).show();
+
+    /**
+     * 选择日期对话框
+     */
+    private void showSubmitDia() {
+        final NiftyDialogBuilder submitDia = NiftyDialogBuilder.getInstance(this);
+        View selectDateView = LayoutInflater.from(this).inflate(R.layout.dialog_select_date, null);
+        final DateTimeSelectView ds = (DateTimeSelectView) selectDateView.findViewById(R.id.date_start);
+        final DateTimeSelectView de = (DateTimeSelectView) selectDateView.findViewById(R.id.date_end);
+
+        final Calendar c = Calendar.getInstance();
+        try {
+            startDate = ymdhm.parse(ymdhm.format(new Date()));// 当日00：00：00
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        endDate = new Date();
+
+        submitDia.withTitle("选择查询日期");
+        submitDia.withButton1Text("取消", 0).setButton1Click(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitDia.dismiss();
+            }
+        });
+        submitDia.withButton2Text("确定", 0).setButton2Click(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    startDate = ymdhm.parse(ds.getDate());
+                    Log.d(TAG, "开始：" + ds.getDate() + "，结束：" + de.getDate() + "，当前：" + ymdhm.format(new Date()));
+//                    if (ymd.format(new Date()).equals(de.getDate())) {// 结束日期是今天
+//                        endDate = new Date();// 当前时间
 //                    } else {
-//                        selectData(startDate, endDate);
-//                        setAdapter(mDatas);
-//                        submitDia.dismiss();
+//                        endDate = new Date(ymd.parse(de.getDate()).getTime() + 1000 * 60 * 60 * 24 - 1);// 当日23：59：59
 //                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//        submitDia.setCustomView(selectDateView, this);// "请选择查询日期"
-//        submitDia.withMessage(null).withDuration(400);
-//        submitDia.isCancelable(false);
-//        submitDia.show();
-//    }
+                    endDate = ymdhm.parse(de.getDate());
+                    if (endDate.before(startDate)) {
+                        Toast.makeText(RecordListActivity.this, "开始日期不能大于结束日期", Toast.LENGTH_LONG).show();
+                    } else {
+                        selectData(startDate, endDate);
+                        setAdapter(mDatas);
+                        submitDia.dismiss();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        submitDia.setCustomView(selectDateView, this);// "请选择查询日期"
+        submitDia.withMessage(null).withDuration(400);
+        submitDia.isCancelable(false);
+        submitDia.show();
+    }
 
     private void searchRecord(String result) {
         mDatas = DataSupport.where("room = ? or name = ? or phone = ? or card = ?",
@@ -228,6 +235,7 @@ public class RecordListActivity extends AppCompatActivity {
             holder.tv_name.setText(hotelCheckDB.getName());
             holder.tv_room.setText(hotelCheckDB.getRoom());
             holder.tv_time.setText(ymdhm.format(new Date(hotelCheckDB.getTime())));
+            holder.tv_out.setText(ymdhm.format(new Date(hotelCheckDB.getOut())));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -263,7 +271,7 @@ public class RecordListActivity extends AppCompatActivity {
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
-            TextView tv_num, tv_name, tv_room, tv_time, tv_delete;
+            TextView tv_num, tv_name, tv_room, tv_time, tv_out, tv_delete;
 
             public MyViewHolder(View view) {
                 super(view);
@@ -271,6 +279,7 @@ public class RecordListActivity extends AppCompatActivity {
                 tv_name = (TextView) view.findViewById(R.id.item_record_name);
                 tv_room = (TextView) view.findViewById(R.id.item_record_room);
                 tv_time = (TextView) view.findViewById(R.id.item_record_time);
+                tv_out = (TextView) view.findViewById(R.id.item_record_out);
                 tv_delete = (TextView) view.findViewById(R.id.item_record_operate);
             }
         }

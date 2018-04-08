@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -46,16 +47,19 @@ import org.litepal.LitePal;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText etName, etPhone, etCard, etRoom, etDay, etPrice, etCost, etDeposit;
-    private RadioButton rbTypeHour, rbTypeOverstay, rbPayAlipay, rbPayWechat, rbPayMeituan,
+    private RadioButton rbTypeHour, rbTypeOverstay, rbPayAlipay, rbPayWechat, rbPayMeituan, rbPayPos,
             rbFromPhone, rbFromMeituan, rbFromXiecheng;
     private TextView tvTime, tvOut, tvCost;
 
     private String dateTimeStr;
+    private SimpleDateFormat ymdhm = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private SimpleDateFormat ymd = new SimpleDateFormat("yyyy-MM-dd 12:00:00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +90,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    tvCost.setText("" +
-                            Long.valueOf(Integer.valueOf(s.toString()) * Integer.valueOf(etPrice.getText().toString())));
+                    tvTime.setText(ymdhm.format(new Date()));
+                    tvOut.setText(ymd.format(new Date(System.currentTimeMillis() +
+                            Long.valueOf(s.toString()) * 24 * 60 * 60 * 1000)));
+
+                    if (rbTypeHour.isChecked()) {
+                        tvCost.setText(etPrice.getText().toString());
+                    } else {
+                        tvCost.setText("" + Long.valueOf(s.toString()) * Integer.valueOf(etPrice.getText().toString()));
+                    }
                 } catch (NumberFormatException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -106,8 +118,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    tvCost.setText(Long.valueOf(Integer.valueOf(s.toString()) * Integer.valueOf(etDay.getText().toString())) + "");
+                    if (rbTypeHour.isChecked()) {
+                        tvCost.setText(s);
+                    } else {
+                        tvCost.setText(Long.valueOf(Integer.valueOf(s.toString()) * Integer.valueOf(etDay.getText().toString())) + "");
+                    }
                 } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        rbTypeHour.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    etDay.setText("0");
+                    etDay.setEnabled(false);
+                    tvTime.setText(ymdhm.format(new Date()));
+                    tvOut.setText(ymdhm.format(new Date(System.currentTimeMillis() + 4 * 60 * 60 * 1000)));
+                } else {
+                    etDay.setText("");
+                    etDay.setEnabled(true);
+                    tvTime.setText("");
+                    tvOut.setText("");
                 }
             }
         });
@@ -130,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rbPayAlipay = (RadioButton) findViewById(R.id.rb_pay_alipay);
         rbPayWechat = (RadioButton) findViewById(R.id.rb_pay_wechat);
         rbPayMeituan = (RadioButton) findViewById(R.id.rb_pay_meituan);
+        rbPayPos = (RadioButton) findViewById(R.id.rb_pay_pos);
         rbFromPhone = (RadioButton) findViewById(R.id.rb_from_phone);
         rbFromMeituan = (RadioButton) findViewById(R.id.rb_from_meituan);
         rbFromXiecheng = (RadioButton) findViewById(R.id.rb_from_xiecheng);
@@ -193,7 +228,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "最晚退房时间不能为空", Toast.LENGTH_LONG).show();
                 return;
             }
-            SimpleDateFormat ymdhm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             long startTime = ymdhm.parse(start).getTime();
             long endTime = ymdhm.parse(end).getTime();// 结束时间
             if (startTime > endTime) {
@@ -202,6 +236,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             if (TextUtils.isEmpty(etDay.getText().toString())) {
                 Toast.makeText(this, "入住天数不能为空", Toast.LENGTH_LONG).show();
+                return;
+            }
+            if (!rbTypeHour.isChecked() && "0".equals(etDay.getText().toString())) {
+                Toast.makeText(this, "非钟点房入住天数不能为0", Toast.LENGTH_LONG).show();
                 return;
             }
             if (TextUtils.isEmpty(etPrice.getText().toString())) {
@@ -242,6 +280,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 hotelCheckDB.setPay("微信");
             } else if (rbPayMeituan.isChecked()) {
                 hotelCheckDB.setPay("美团");
+            } else if (rbPayPos.isChecked()) {
+                hotelCheckDB.setPay("刷卡");
             } else {
                 hotelCheckDB.setPay("现金");
             }
@@ -273,9 +313,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             etPhone.setText("");
             etCard.setText("");
             etRoom.setText("");
+            etDay.setText("");
             tvTime.setText("");
             tvOut.setText("");
-            etDay.setText("");
             etPrice.setText("");
             tvCost.setText("");
             etCost.setText("");
@@ -303,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     timeBuffer.append("0");
                 }
                 timeBuffer.append(minute);
-                textView.setText(dateTimeStr + timeBuffer + ":00");
+                textView.setText(dateTimeStr + timeBuffer);
             }
         }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true);
 

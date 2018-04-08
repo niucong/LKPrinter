@@ -23,7 +23,7 @@ public class HotelCheckDB extends DataSupport implements Parcelable {
     private int price;// 房间单价
     private int cost;// 已交费用
     private int deposit;// 已收押金
-    private String pay;// 收款方式：支付宝、微信、美团、现金（默认）
+    private String pay;// 收款方式：支付宝、微信、美团、现金（默认）、刷卡
     private String from;// 电话、美团、携程、去哪儿、其它（默认）
 
     public String getType() {

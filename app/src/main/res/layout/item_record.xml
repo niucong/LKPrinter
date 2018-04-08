@@ -51,6 +51,18 @@
         android:textSize="16dp"/>
 
     <TextView
+        android:id="@+id/item_record_out"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:maxLines="1"
+        android:text="最晚退房时间"
+        android:textColor="#cc000000"
+        android:textSize="16dp"/>
+
+    <TextView
         android:id="@+id/item_record_operate"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
