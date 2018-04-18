@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center_vertical"
+              android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="105dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:gravity="right"
+        android:text="*房间号码"
+        android:textColor="#999999"
+        android:textSize="16dp"/>
+
+    <EditText
+        android:id="@+id/et_room"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:maxLength="5"
+        android:singleLine="true"/>
+
+    <TextView
+        android:layout_width="105dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:gravity="right"
+        android:text="*房间单价"
+        android:textColor="#999999"
+        android:textSize="16dp"/>
+
+    <EditText
+        android:id="@+id/et_price"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:maxLength="5"
+        android:singleLine="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="元"
+        android:textColor="#000000"
+        android:textSize="18dp"/>
+
+    <Button
+        android:id="@+id/remove_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="删除房间"/>
+</LinearLayout>

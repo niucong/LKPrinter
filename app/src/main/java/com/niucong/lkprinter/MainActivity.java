@@ -1,12 +1,10 @@
 package com.niucong.lkprinter;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -21,12 +19,14 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -44,16 +44,20 @@ import com.niucong.lkprinter.printer.PrinterConnectDialog;
 import com.niucong.lkprinter.util.PrintUtil;
 
 import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText etName, etPhone, etCard, etRoom, etDay, etPrice, etCost, etDeposit;
-    private RadioButton rbTypeHour, rbTypeOverstay, rbPayAlipay, rbPayWechat, rbPayMeituan, rbPayPos,
+    private LinearLayout ll_room;
+    private EditText etName, etPhone, etCard, etDay, etCost, etDeposit;
+    private RadioButton rbTypeHour, rbTypeOverstay, rbPayAlipay, rbPayWechat, rbPayMeituan, rbPayXiecheng, rbPayPos,
             rbFromPhone, rbFromMeituan, rbFromXiecheng;
     private TextView tvTime, tvOut, tvCost;
 
@@ -74,7 +78,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         tvTime.setOnClickListener(this);
         tvOut.setOnClickListener(this);
+        findViewById(R.id.add_room).setOnClickListener(this);
         findViewById(R.id.btn_print).setOnClickListener(this);
+
+        addRoomView();
 
         etDay.addTextChangedListener(new TextWatcher() {
             @Override
@@ -93,36 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     tvTime.setText(ymdhm.format(new Date()));
                     tvOut.setText(ymd.format(new Date(System.currentTimeMillis() +
                             Long.valueOf(s.toString()) * 24 * 60 * 60 * 1000)));
-
-                    if (rbTypeHour.isChecked()) {
-                        tvCost.setText(etPrice.getText().toString());
-                    } else {
-                        tvCost.setText("" + Long.valueOf(s.toString()) * Integer.valueOf(etPrice.getText().toString()));
-                    }
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        etPrice.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                try {
-                    if (rbTypeHour.isChecked()) {
-                        tvCost.setText(s);
-                    } else {
-                        tvCost.setText(Long.valueOf(Integer.valueOf(s.toString()) * Integer.valueOf(etDay.getText().toString())) + "");
-                    }
+                    calculateTotlePrice();
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
@@ -151,23 +129,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         etName = (EditText) findViewById(R.id.et_name);
         etPhone = (EditText) findViewById(R.id.et_phone);
         etCard = (EditText) findViewById(R.id.et_card);
-        etRoom = (EditText) findViewById(R.id.et_room);
         rbTypeHour = (RadioButton) findViewById(R.id.rb_type_hour);
         rbTypeOverstay = (RadioButton) findViewById(R.id.rb_type_overstay);
         tvTime = (TextView) findViewById(R.id.tv_time);
         tvOut = (TextView) findViewById(R.id.tv_out);
         etDay = (EditText) findViewById(R.id.et_day);
-        etPrice = (EditText) findViewById(R.id.et_price);
         tvCost = (TextView) findViewById(R.id.tv_cost);
         etCost = (EditText) findViewById(R.id.et_cost);
         etDeposit = (EditText) findViewById(R.id.et_deposit);
         rbPayAlipay = (RadioButton) findViewById(R.id.rb_pay_alipay);
         rbPayWechat = (RadioButton) findViewById(R.id.rb_pay_wechat);
         rbPayMeituan = (RadioButton) findViewById(R.id.rb_pay_meituan);
+        rbPayXiecheng = (RadioButton) findViewById(R.id.rb_pay_xiecheng);
         rbPayPos = (RadioButton) findViewById(R.id.rb_pay_pos);
         rbFromPhone = (RadioButton) findViewById(R.id.rb_from_phone);
         rbFromMeituan = (RadioButton) findViewById(R.id.rb_from_meituan);
         rbFromXiecheng = (RadioButton) findViewById(R.id.rb_from_xiecheng);
+
+        ll_room = (LinearLayout) findViewById(R.id.ll_room);
     }
 
     @Override
@@ -179,10 +158,68 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tv_out:
                 selectDateTime(tvOut);
                 break;
+            case R.id.add_room:
+                addRoomView();
+                break;
             case R.id.btn_print:
-                print();
+                save();
                 break;
         }
+    }
+
+    private void addRoomView() {
+        final View view = LayoutInflater.from(this).inflate(
+                R.layout.item_room_add, null);
+        ((EditText) view.findViewById(R.id.et_price)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                calculateTotlePrice();
+            }
+        });
+        view.findViewById(R.id.remove_room).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ll_room.getChildCount() > 1) {
+                    ll_room.removeView(view);
+                    calculateTotlePrice();
+                } else {
+                    Toast.makeText(MainActivity.this, "只剩一个房间了", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        ll_room.addView(view);
+    }
+
+    /**
+     * 计算房间总价
+     */
+    private void calculateTotlePrice() {
+        long totle = 0;
+        try {
+            int day = Integer.valueOf(etDay.getText().toString());
+            for (int i = 0; i < ll_room.getChildCount(); i++) {
+                View view = ll_room.getChildAt(i);
+                EditText etPrice = view.findViewById(R.id.et_price);
+                if (rbTypeHour.isChecked()) {
+                    totle += Long.valueOf(etPrice.getText().toString());
+                } else {
+                    totle += Long.valueOf(Long.valueOf(day) * Integer.valueOf(etPrice.getText().toString()));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        tvCost.setText("" + totle);
     }
 
     @Override
@@ -212,12 +249,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    private void print() {
+    private void save() {
         try {
-            if (TextUtils.isEmpty(etRoom.getText().toString())) {
-                Toast.makeText(this, "房间号不能为空", Toast.LENGTH_LONG).show();
-                return;
+
+            for (int i = 0; i < ll_room.getChildCount(); i++) {
+                View view = ll_room.getChildAt(i);
+                EditText etRoom = view.findViewById(R.id.et_room);
+                EditText etPrice = view.findViewById(R.id.et_price);
+                if (TextUtils.isEmpty(etRoom.getText().toString())) {
+                    Toast.makeText(this, "房间号不能为空", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(etPrice.getText().toString())) {
+                    Toast.makeText(this, "房间单价不能为空", Toast.LENGTH_LONG).show();
+                    return;
+                }
             }
+
             String start = tvTime.getText().toString();
             if (TextUtils.isEmpty(start)) {
                 Toast.makeText(this, "入住时间不能为空", Toast.LENGTH_LONG).show();
@@ -242,10 +290,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "非钟点房入住天数不能为0", Toast.LENGTH_LONG).show();
                 return;
             }
-            if (TextUtils.isEmpty(etPrice.getText().toString())) {
-                Toast.makeText(this, "房间单价不能为空", Toast.LENGTH_LONG).show();
-                return;
-            }
             if (TextUtils.isEmpty(etCost.getText().toString())) {
                 Toast.makeText(this, "已交费用不能为空", Toast.LENGTH_LONG).show();
                 return;
@@ -255,71 +299,81 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return;
             }
 
-            final HotelCheckDB hotelCheckDB = new HotelCheckDB();
-            hotelCheckDB.setSerial_number(System.currentTimeMillis());
-            hotelCheckDB.setName(etName.getText().toString());
-            hotelCheckDB.setPhone(etPhone.getText().toString());
-            hotelCheckDB.setCard(etCard.getText().toString());
-            hotelCheckDB.setRoom(etRoom.getText().toString());
-            if (rbTypeHour.isChecked()) {
-                hotelCheckDB.setType("钟点");
-            } else if (rbTypeOverstay.isChecked()) {
-                hotelCheckDB.setType("续住");
-            } else {
-                hotelCheckDB.setType("全天");
+            long serial_number = System.currentTimeMillis();
+            final List<HotelCheckDB> list = new ArrayList<>();
+            for (int i = 0; i < ll_room.getChildCount(); i++) {
+                View view = ll_room.getChildAt(i);
+                EditText etRoom = view.findViewById(R.id.et_room);
+                EditText etPrice = view.findViewById(R.id.et_price);
+                final HotelCheckDB hotelCheckDB = new HotelCheckDB();
+                hotelCheckDB.setSerial_number(serial_number);
+                hotelCheckDB.setName(etName.getText().toString());
+                hotelCheckDB.setPhone(etPhone.getText().toString());
+                hotelCheckDB.setCard(etCard.getText().toString());
+                hotelCheckDB.setRoom(etRoom.getText().toString());
+                hotelCheckDB.setPrice(Integer.valueOf(etPrice.getText().toString()));
+                if (rbTypeHour.isChecked()) {
+                    hotelCheckDB.setType("钟点");
+                } else if (rbTypeOverstay.isChecked()) {
+                    hotelCheckDB.setType("续住");
+                } else {
+                    hotelCheckDB.setType("全天");
+                }
+                hotelCheckDB.setTime(startTime);
+                hotelCheckDB.setOut(endTime);
+                hotelCheckDB.setDay(Integer.valueOf(etDay.getText().toString()));
+                hotelCheckDB.setCost(Integer.valueOf(etCost.getText().toString()));
+                hotelCheckDB.setDeposit(Integer.valueOf(etDeposit.getText().toString()));
+                if (rbPayAlipay.isChecked()) {
+                    hotelCheckDB.setPay("支付宝");
+                } else if (rbPayWechat.isChecked()) {
+                    hotelCheckDB.setPay("微信");
+                } else if (rbPayMeituan.isChecked()) {
+                    hotelCheckDB.setPay("美团");
+                } else if (rbPayXiecheng.isChecked()) {
+                    hotelCheckDB.setPay("携程");
+                } else if (rbPayPos.isChecked()) {
+                    hotelCheckDB.setPay("刷卡");
+                } else {
+                    hotelCheckDB.setPay("现金");
+                }
+                if (rbFromPhone.isChecked()) {
+                    hotelCheckDB.setFrom("电话预定");
+                } else if (rbFromMeituan.isChecked()) {
+                    hotelCheckDB.setFrom("美团");
+                } else if (rbFromXiecheng.isChecked()) {
+                    hotelCheckDB.setFrom("携程");
+                } else {
+                    hotelCheckDB.setFrom("其它");
+                }
+                list.add(hotelCheckDB);
             }
-            hotelCheckDB.setTime(startTime);
-            hotelCheckDB.setOut(endTime);
-            hotelCheckDB.setDay(Integer.valueOf(etDay.getText().toString()));
-            hotelCheckDB.setPrice(Integer.valueOf(etPrice.getText().toString()));
-            hotelCheckDB.setCost(Integer.valueOf(etCost.getText().toString()));
-            hotelCheckDB.setDeposit(Integer.valueOf(etDeposit.getText().toString()));
-            if (rbPayAlipay.isChecked()) {
-                hotelCheckDB.setPay("支付宝");
-            } else if (rbPayWechat.isChecked()) {
-                hotelCheckDB.setPay("微信");
-            } else if (rbPayMeituan.isChecked()) {
-                hotelCheckDB.setPay("美团");
-            } else if (rbPayPos.isChecked()) {
-                hotelCheckDB.setPay("刷卡");
-            } else {
-                hotelCheckDB.setPay("现金");
-            }
-            if (rbFromPhone.isChecked()) {
-                hotelCheckDB.setFrom("电话预定");
-            } else if (rbFromMeituan.isChecked()) {
-                hotelCheckDB.setFrom("美团");
-            } else if (rbFromXiecheng.isChecked()) {
-                hotelCheckDB.setFrom("携程");
-            } else {
-                hotelCheckDB.setFrom("其它");
-            }
-            hotelCheckDB.save();
+            DataSupport.saveAll(list);
 
-            PrintUtil.printStick(mGpService, hotelCheckDB);
+            PrintUtil.printStick(mGpService, list);
 
-            new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("提示")
-                    .setMessage("是否继续打印小票")
-                    .setPositiveButton("继续打印",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    PrintUtil.printStick(mGpService, hotelCheckDB);
-                                }
-                            }).setNegativeButton("取消", null).show();
+//            new AlertDialog.Builder(MainActivity.this)
+//                    .setTitle("提示")
+//                    .setMessage("是否继续打印小票")
+//                    .setPositiveButton("继续打印",
+//                            new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    PrintUtil.printStick(mGpService, list);
+//                                }
+//                            }).setNegativeButton("取消", null).show();
 
             etName.setText("");
             etPhone.setText("");
             etCard.setText("");
-            etRoom.setText("");
             etDay.setText("");
             tvTime.setText("");
             tvOut.setText("");
-            etPrice.setText("");
             tvCost.setText("");
             etCost.setText("");
             etDeposit.setText("");
+            ll_room.removeAllViews();
+            addRoomView();
         } catch (Exception e) {
             Toast.makeText(this, "输入信息错误", Toast.LENGTH_LONG).show();
         }
@@ -491,19 +545,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         esc.addText("Sample\n"); // 打印文字
         esc.addPrintAndLineFeed();
 
-		/* 打印文字 */
+        /* 打印文字 */
         esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF);// 取消倍高倍宽
         esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);// 设置打印左对齐
         esc.addText("Print text\n"); // 打印文字
         esc.addText("Welcome to use SMARNET printer!\n"); // 打印文字
 
-		/* 打印繁体中文 需要打印机支持繁体字库 */
+        /* 打印繁体中文 需要打印机支持繁体字库 */
         String message = "佳博智匯票據打印機\n";
         // esc.addText(message,"BIG5");
         esc.addText(message, "GB2312");
         esc.addPrintAndLineFeed();
 
-		/* 绝对位置 具体详细信息请查看GP58编程手册 */
+        /* 绝对位置 具体详细信息请查看GP58编程手册 */
         esc.addText("智汇");
         esc.addSetHorAndVerMotionUnits((byte) 7, (byte) 0);
         esc.addSetAbsolutePrintPosition((short) 6);
@@ -512,13 +566,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         esc.addText("设备");
         esc.addPrintAndLineFeed();
 
-		/* 打印图片 */
+        /* 打印图片 */
         // esc.addText("Print bitmap!\n"); // 打印文字
         // Bitmap b = BitmapFactory.decodeResource(getResources(),
         // R.drawable.gprinter);
         // esc.addRastBitImage(b, b.getWidth(), 0); // 打印图片
 
-		/* 打印一维条码 */
+        /* 打印一维条码 */
         esc.addText("Print code128\n"); // 打印文字
         esc.addSelectPrintingPositionForHRICharacters(EscCommand.HRI_POSITION.BELOW);//
         // 设置条码可识别字符位置在条码下方
@@ -527,9 +581,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         esc.addCODE128(esc.genCodeB("SMARNET")); // 打印Code128码
         esc.addPrintAndLineFeed();
 
-		/*
+        /*
          * QRCode命令打印 此命令只在支持QRCode命令打印的机型才能使用。 在不支持二维码指令打印的机型上，则需要发送二维条码图片
-		 */
+         */
         esc.addText("Print QRcode\n"); // 打印文字
         esc.addSelectErrorCorrectionLevelForQRCode((byte) 0x31); // 设置纠错等级
         esc.addSelectSizeOfModuleForQRCode((byte) 3);// 设置qrcode模块大小
@@ -537,7 +591,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         esc.addPrintQRCode();// 打印QRCode
         esc.addPrintAndLineFeed();
 
-		/* 打印文字 */
+        /* 打印文字 */
         esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);// 设置打印左对齐
         esc.addText("Completed!\r\n"); // 打印结束
         esc.addGeneratePlus(LabelCommand.FOOT.F5, (byte) 255, (byte) 255);

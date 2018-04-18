@@ -16,11 +16,11 @@ public class HotelCheckDB extends DataSupport implements Parcelable {
     private String phone;// 客户电话
     private String card;// 身份证号
     private String room;// 房间号
+    private int price;// 房间单价
     private String type;// 入住性质：全天、钟点、续住
     private long time;// 入住时间
     private long out;// 最晚退房时间
     private int day;// 入住天数
-    private int price;// 房间单价
     private int cost;// 已交费用
     private int deposit;// 已收押金
     private String pay;// 收款方式：支付宝、微信、美团、现金（默认）、刷卡

@@ -88,26 +88,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:gravity="bottom"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="105dp"
+            <LinearLayout
+                android:id="@+id/ll_room"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:gravity="right"
-                android:text="*房间号码"
-                android:textColor="#999999"
-                android:textSize="16dp"/>
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/et_room"
-                android:layout_width="80dp"
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/add_room"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLength="5"
-                android:singleLine="true"/>
+                android:layout_marginLeft="10dp"
+                android:text="添加房间"/>
         </LinearLayout>
 
         <LinearLayout
@@ -157,6 +154,38 @@
             android:orientation="horizontal">
 
             <TextView
+                android:layout_width="105dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:gravity="right"
+                android:text="*入住天数"
+                android:textColor="#999999"
+                android:textSize="16dp"/>
+
+            <EditText
+                android:id="@+id/et_day"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:maxLength="5"
+                android:singleLine="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="天"
+                android:textColor="#000000"
+                android:textSize="18dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -196,70 +225,6 @@
                 android:id="@+id/tv_out"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:textSize="18dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:gravity="right"
-                android:text="*入住天数"
-                android:textColor="#999999"
-                android:textSize="16dp"/>
-
-            <EditText
-                android:id="@+id/et_day"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLength="5"
-                android:singleLine="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="天"
-                android:textColor="#000000"
-                android:textSize="18dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:gravity="right"
-                android:text="*房间单价"
-                android:textColor="#999999"
-                android:textSize="16dp"/>
-
-            <EditText
-                android:id="@+id/et_price"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLength="5"
-                android:singleLine="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="元"
                 android:textColor="#000000"
                 android:textSize="18dp"/>
         </LinearLayout>
@@ -396,6 +361,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="美团"/>
+
+                <RadioButton
+                    android:id="@+id/rb_pay_xiecheng"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="携程"/>
 
                 <RadioButton
                     android:id="@+id/rb_pay_cash"

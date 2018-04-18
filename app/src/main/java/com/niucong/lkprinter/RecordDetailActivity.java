@@ -9,8 +9,10 @@ import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gprinter.aidl.GpService;
@@ -18,17 +20,22 @@ import com.gprinter.service.GpPrintService;
 import com.niucong.lkprinter.db.HotelCheckDB;
 import com.niucong.lkprinter.util.PrintUtil;
 
+import org.litepal.crud.DataSupport;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class RecordDetailActivity extends AppCompatActivity {
     private static final String TAG = "RecordDetailActivity";
 
-    private TextView tv_number, tv_name, tv_phone, tv_card, tv_room, tv_type, tv_time, tv_out,
-            tv_day, tv_price, tv_cost, tv_paid, tv_deposit, tv_pay, tv_from;
+    private TextView tv_number, tv_name, tv_phone, tv_card, tv_type, tv_time, tv_out,
+            tv_day, tv_cost, tv_paid, tv_deposit, tv_pay, tv_from;
+    private LinearLayout ll_room;
 
     private SimpleDateFormat ymdhm = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private HotelCheckDB hotelCheckDB;
+    private List<HotelCheckDB> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +49,7 @@ public class RecordDetailActivity extends AppCompatActivity {
         }
 
         hotelCheckDB = getIntent().getParcelableExtra("HotelCheckDB");
+        list = DataSupport.where("serial_number = ?", "" + hotelCheckDB.getSerial_number()).find(HotelCheckDB.class);
 
         initView();
 
@@ -49,13 +57,23 @@ public class RecordDetailActivity extends AppCompatActivity {
         tv_name.setText(hotelCheckDB.getName());
         tv_phone.setText(hotelCheckDB.getPhone());
         tv_card.setText(hotelCheckDB.getCard());
-        tv_room.setText(hotelCheckDB.getRoom());
+
+        long totle = 0;
+        for (HotelCheckDB checkDB : list) {
+            final View view = LayoutInflater.from(this).inflate(
+                    R.layout.item_room_detail, null);
+            TextView tv_room = view.findViewById(R.id.tv_room);
+            TextView tv_price = view.findViewById(R.id.tv_price);
+            tv_room.setText(checkDB.getRoom());
+            tv_price.setText(checkDB.getPrice() + "");
+            totle += checkDB.getDay() * checkDB.getPrice();
+            ll_room.addView(view);
+        }
         tv_type.setText(hotelCheckDB.getType());
         tv_time.setText(ymdhm.format(new Date(hotelCheckDB.getTime())));
         tv_out.setText(ymdhm.format(new Date(hotelCheckDB.getOut())));
         tv_day.setText(hotelCheckDB.getDay() + "");
-        tv_price.setText(hotelCheckDB.getPrice() + "");
-        tv_cost.setText(hotelCheckDB.getDay() * hotelCheckDB.getPrice() + "");
+        tv_cost.setText(totle + "");
         tv_paid.setText(hotelCheckDB.getCost() + "");
         tv_deposit.setText(hotelCheckDB.getDeposit() + "");
         tv_pay.setText(hotelCheckDB.getPay());
@@ -64,7 +82,7 @@ public class RecordDetailActivity extends AppCompatActivity {
         findViewById(R.id.btn_print).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PrintUtil.printStick(mGpService, hotelCheckDB);
+                PrintUtil.printStick(mGpService, list);
             }
         });
 
@@ -84,16 +102,16 @@ public class RecordDetailActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        ll_room = (LinearLayout) findViewById(R.id.ll_room);
+
         tv_number = (TextView) findViewById(R.id.tv_number);
         tv_name = (TextView) findViewById(R.id.tv_name);
         tv_phone = (TextView) findViewById(R.id.tv_phone);
         tv_card = (TextView) findViewById(R.id.tv_card);
-        tv_room = (TextView) findViewById(R.id.tv_room);
         tv_type = (TextView) findViewById(R.id.tv_type);
         tv_time = (TextView) findViewById(R.id.tv_time);
         tv_out = (TextView) findViewById(R.id.tv_out);
         tv_day = (TextView) findViewById(R.id.tv_day);
-        tv_price = (TextView) findViewById(R.id.tv_price);
         tv_cost = (TextView) findViewById(R.id.tv_cost);
         tv_paid = (TextView) findViewById(R.id.tv_paid);
         tv_deposit = (TextView) findViewById(R.id.tv_deposit);

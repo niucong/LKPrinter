@@ -11,6 +11,7 @@ import com.gprinter.io.utils.GpUtils;
 import com.niucong.lkprinter.db.HotelCheckDB;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -23,9 +24,9 @@ public class PrintUtil {
      * 打印小票
      *
      * @param mGpService
-     * @param hotelCheckDB
+     * @param list
      */
-    public static void printStick(GpService mGpService, HotelCheckDB hotelCheckDB) {
+    public static void printStick(GpService mGpService, List<HotelCheckDB> list) {
         EscCommand esc = new EscCommand();
         esc.addPrintAndFeedLines((byte) 2);
         // 设置打印居中
@@ -43,6 +44,7 @@ public class PrintUtil {
                 EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF);
         esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);// 设置打印左对齐
 
+        HotelCheckDB hotelCheckDB = list.get(0);
         esc.addText("流水号：" + hotelCheckDB.getSerial_number() + "\n");
         if (!TextUtils.isEmpty(hotelCheckDB.getName())) {
             esc.addText("客户名称：" + hotelCheckDB.getName() + "\n");
@@ -53,12 +55,15 @@ public class PrintUtil {
         if (!TextUtils.isEmpty(hotelCheckDB.getCard())) {
             esc.addText("身份证号：" + hotelCheckDB.getCard() + "\n");
         }
-        esc.addText("房间号：" + hotelCheckDB.getRoom() + "\n");
+
+        for (HotelCheckDB checkDB : list) {
+            esc.addText("房间号：" + checkDB.getRoom() + "  ");
+            esc.addText("房间单价：" + checkDB.getPrice() + "元\n");
+        }
         esc.addText("入住性质：" + hotelCheckDB.getType() + "\n");
         esc.addText("入住时间：" + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(hotelCheckDB.getTime()) + "\n");
         esc.addText("最晚退房时间：" + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(hotelCheckDB.getOut()) + "\n");
         esc.addText("入住天数：" + hotelCheckDB.getDay() + "天\n");
-        esc.addText("房间单价：" + hotelCheckDB.getPrice() + "元\n");
         esc.addText("房间总费用：" + hotelCheckDB.getPrice() * hotelCheckDB.getDay() + "元\n");
         esc.addText("已交费用：" + hotelCheckDB.getPay() + " " + hotelCheckDB.getCost() + "元\n");
         esc.addText("退房押金：" + hotelCheckDB.getDeposit() + "元\n");
