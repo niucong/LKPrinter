@@ -369,6 +369,12 @@
                     android:text="携程"/>
 
                 <RadioButton
+                    android:id="@+id/rb_pay_feizhu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="飞猪"/>
+
+                <RadioButton
                     android:id="@+id/rb_pay_cash"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -419,6 +425,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="携程"/>
+
+                <RadioButton
+                    android:id="@+id/rb_from_feizhu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="飞猪"/>
 
                 <RadioButton
                     android:id="@+id/rb_from_other"

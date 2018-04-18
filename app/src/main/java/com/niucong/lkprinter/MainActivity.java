@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private LinearLayout ll_room;
     private EditText etName, etPhone, etCard, etDay, etCost, etDeposit;
-    private RadioButton rbTypeHour, rbTypeOverstay, rbPayAlipay, rbPayWechat, rbPayMeituan, rbPayXiecheng, rbPayPos,
-            rbFromPhone, rbFromMeituan, rbFromXiecheng;
+    private RadioButton rbTypeHour, rbTypeOverstay, rbPayAlipay, rbPayWechat, rbPayMeituan, rbPayXiecheng, rbPayFeizhu, rbPayPos,
+            rbFromPhone, rbFromMeituan, rbFromXiecheng, rbFromFeizhu;
     private TextView tvTime, tvOut, tvCost;
 
     private String dateTimeStr;
@@ -141,10 +141,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rbPayWechat = (RadioButton) findViewById(R.id.rb_pay_wechat);
         rbPayMeituan = (RadioButton) findViewById(R.id.rb_pay_meituan);
         rbPayXiecheng = (RadioButton) findViewById(R.id.rb_pay_xiecheng);
+        rbPayFeizhu = (RadioButton) findViewById(R.id.rb_pay_feizhu);
         rbPayPos = (RadioButton) findViewById(R.id.rb_pay_pos);
         rbFromPhone = (RadioButton) findViewById(R.id.rb_from_phone);
         rbFromMeituan = (RadioButton) findViewById(R.id.rb_from_meituan);
         rbFromXiecheng = (RadioButton) findViewById(R.id.rb_from_xiecheng);
+        rbFromFeizhu = (RadioButton) findViewById(R.id.rb_from_feizhu);
 
         ll_room = (LinearLayout) findViewById(R.id.ll_room);
     }
@@ -332,6 +334,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     hotelCheckDB.setPay("美团");
                 } else if (rbPayXiecheng.isChecked()) {
                     hotelCheckDB.setPay("携程");
+                } else if (rbPayFeizhu.isChecked()) {
+                    hotelCheckDB.setPay("飞猪");
                 } else if (rbPayPos.isChecked()) {
                     hotelCheckDB.setPay("刷卡");
                 } else {
@@ -343,6 +347,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     hotelCheckDB.setFrom("美团");
                 } else if (rbFromXiecheng.isChecked()) {
                     hotelCheckDB.setFrom("携程");
+                } else if (rbFromFeizhu.isChecked()) {
+                    hotelCheckDB.setFrom("飞猪");
                 } else {
                     hotelCheckDB.setFrom("其它");
                 }
