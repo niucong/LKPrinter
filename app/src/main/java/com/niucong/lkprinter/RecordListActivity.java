@@ -123,7 +123,7 @@ public class RecordListActivity extends AppCompatActivity {
                 this.finish(); // back button
                 break;
             case R.id.action_all:
-                mDatas = DataSupport.findAll(HotelCheckDB.class);
+                mDatas = DataSupport.order("id desc").find(HotelCheckDB.class);
                 setAdapter(mDatas);
                 break;
             case R.id.action_day:

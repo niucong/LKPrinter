@@ -1,10 +1,12 @@
 package com.niucong.lkprinter;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -358,16 +360,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             PrintUtil.printStick(mGpService, list);
 
-//            new AlertDialog.Builder(MainActivity.this)
-//                    .setTitle("提示")
-//                    .setMessage("是否继续打印小票")
-//                    .setPositiveButton("继续打印",
-//                            new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    PrintUtil.printStick(mGpService, list);
-//                                }
-//                            }).setNegativeButton("取消", null).show();
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("提示")
+                    .setMessage("是否继续打印小票")
+                    .setPositiveButton("继续打印",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    PrintUtil.printStick(mGpService, list);
+                                }
+                            }).setNegativeButton("取消", null).show();
 
             etName.setText("");
             etPhone.setText("");
